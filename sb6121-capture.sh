@@ -29,12 +29,12 @@ LOG=$HOME/SB6121-dump.csv
 STATUS=$(curl -s http://192.168.100.1/indexData.htm | grep -A 1 'Cable Modem Status' | tail -n1 | sed -e s'|<TD>||' -e 's|</TD></TR>||' -e 's/ //g')
 
 # now the levels
-wget -q --mirror http://192.168.100.1/cmSignal.htm -O $FILE
+wget -q --mirror http://192.168.100.1/cmSignal.htm -O "$FILE"
 
 # define arrays
-mapfile -t SNRArr < <(grep 'dB&nbsp' $FILE | sed -e 's/[^0-9 ]*//g' -e 's/ /\n/g' | head -n4)
-mapfile -t DPArr < <(grep -A 4 /SMALL $FILE | sed -e 's/[^-0-9 ]*//g' -e s'/--//' | tail -n +2 | tr '\n' ' ' | sed 's/  /\n/g' | head -n4)
-mapfile -t UPArr < <(grep 'dBmV&nbsp' $FILE|  sed -e 's/[^0-9 ]*//g' -e 's/ /\n/g' | head -n4)
+mapfile -t SNRArr < <(grep 'dB&nbsp' "$FILE" | sed -e 's/[^0-9 ]*//g' -e 's/ /\n/g' | head -n4)
+mapfile -t DPArr < <(grep -A 4 /SMALL "$FILE" | sed -e 's/[^-0-9 ]*//g' -e s'/--//' | tail -n +2 | tr '\n' ' ' | sed 's/  /\n/g' | head -n4)
+mapfile -t UPArr < <(grep 'dBmV&nbsp' "$FILE" |  sed -e 's/[^0-9 ]*//g' -e 's/ /\n/g' | head -n4)
 
 [[ -f "$LOG" ]] || 
 	echo "Date,Status,SNR1,SNR2,SNR3,SNR4,Dpower1,Dpower2,Dpower3,Dpower4,Upower1,Upower2,Upower3,Upower4" > "$LOG"
